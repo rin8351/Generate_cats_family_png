@@ -171,6 +171,81 @@ Row 3: Parent5  Parent6  Kitten3  GrandKitten2
 Row 4: Parent7  Parent8  Kitten4
 ```
 
+### 6. **Family Tree Structure**
+
+The cat family follows this genealogical pattern across 4 generations:
+
+```
+Generation 0 (Parents):
+  ┌─────────┐   ┌─────────┐
+  │ Parent1 │ ♥ │ Parent2 │
+  └────┬────┘   └────┬────┘
+       └────────┬────┘
+                │
+Generation 1 (Kittens):      ┌─────────┐
+                    ┌────────┤ Kitten1 ├────────┐
+                    │        └─────────┘        │
+                    │                           │
+  ┌─────────┐   ┌──┴──────┐                    │
+  │ Parent3 │ ♥ │ Parent4 │                    │
+  └────┬────┘   └────┬────┘                    │
+       └────────┬────┘                          │
+                │                               │
+                │        ┌─────────┐            │
+                └────────┤ Kitten2 ├────────┐   │
+                         └─────────┘        │   │
+                                            │   │
+Generation 2 (Grandkittens):                │   │
+                         ┌──────────────────┴───┴───┐
+                         │         GrandKitten1      │
+                         └────────────┬──────────────┘
+                                      │
+  ┌─────────┐   ┌─────────┐           │
+  │ Parent5 │ ♥ │ Parent6 │           │
+  └────┬────┘   └────┬────┘           │
+       └────────┬────┘                │
+                │                     │
+                │        ┌─────────┐  │
+                └────────┤ Kitten3 ├──┤
+                         └─────────┘  │
+                                      │
+  ┌─────────┐   ┌─────────┐           │
+  │ Parent7 │ ♥ │ Parent8 │           │
+  └────┬────┘   └────┬────┘           │
+       └────────┬────┘                │
+                │                     │
+                │        ┌─────────┐  │
+                └────────┤ Kitten4 ├──┤
+                         └─────────┘  │
+                                      │
+                         ┌────────────┴──────────────┐
+                         │      GrandKitten2         │
+                         └────────────┬──────────────┘
+                                      │
+Generation 3 (Great-Grandkitten):     │
+                         ┌────────────┴──────────────┐
+                         │   GreatGrandKitten        │
+                         └───────────────────────────┘
+```
+
+**Family Relationships:**
+- **Generation 0**: 8 parents (4 pairs)
+  - Parent1 ♥ Parent2 → Kitten1
+  - Parent3 ♥ Parent4 → Kitten2
+  - Parent5 ♥ Parent6 → Kitten3
+  - Parent7 ♥ Parent8 → Kitten4
+
+- **Generation 1**: 4 kittens (forming 2 pairs)
+  - Kitten1 ♥ Kitten2 → GrandKitten1
+  - Kitten3 ♥ Kitten4 → GrandKitten2
+
+- **Generation 2**: 2 grandkittens (forming 1 pair)
+  - GrandKitten1 ♥ GrandKitten2 → GreatGrandKitten
+
+- **Generation 3**: 1 great-grandkitten (final descendant)
+
+Each cat's name is displayed with its generation label (e.g., "Lucky (Gen 0)") to make family relationships clear.
+
 ## ⚙️ Configuration
 
 Edit `config.py` to customize:
@@ -187,11 +262,20 @@ CATS_COLORS = [
 ### Generation Parameters
 ```python
 GENERATION_PARAMS = {
-    'background_color': (189, 255, 255),
-    'font_size': 26,
-    # ...
+    'background_color': (240, 255, 255),  # Background color
+    'font_name': 'arial.ttf',             # Font for cat names
+    'font_size': 26,                      # Font size (for names with Gen info)
+    'text_color': (0, 0, 0),              # Text color (black)
+    'text_position': (10, 5),             # Text offset (x: horizontal, y: vertical)
+    'text_padding_bottom': 35,            # Extra space at bottom for text
 }
 ```
+
+**Text Position Parameters:**
+- `text_position`: `(x, y)` offset for fine-tuning text placement
+  - `x`: horizontal offset from center (positive = right, negative = left)
+  - `y`: vertical offset from bottom (higher value = more space from bottom)
+- `text_padding_bottom`: extra white space added below each cat for the name label
 
 ### Output Settings
 ```python

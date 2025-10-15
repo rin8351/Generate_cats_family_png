@@ -159,8 +159,14 @@ class CatImageBuilder:
         final_image.paste(combined_image, (0, 0))
         final_image.paste(legs, ((final_width - legs.width) // 2, vertical_height))
         
+        # Add padding at bottom for text (name + generation)
+        text_padding = GENERATION_PARAMS.get('text_padding_bottom', 35)
+        final_height = vertical_height + legs.height + text_padding
+        padded_image = Image.new('RGB', (final_width, final_height), (255, 255, 255))
+        padded_image.paste(final_image, (0, 0))
+        
         logger.debug("Combined all cat parts into single image")
-        return final_image
+        return padded_image
     
     @staticmethod
     def apply_color_numpy(img: Image.Image, color_map: Dict[RGB, RGB]) -> Image.Image:
@@ -202,12 +208,11 @@ class CatImageBuilder:
         Args:
             img: Image to modify
             text: Text to add
-            position: (x, y) position for text
+            position: (x, y) position for text (if None, places at bottom)
             font_name: Font file name
             font_size: Font size
             color: Text color
         """
-        position = position or GENERATION_PARAMS['text_position']
         font_name = font_name or GENERATION_PARAMS['font_name']
         font_size = font_size or GENERATION_PARAMS['font_size']
         color = color or GENERATION_PARAMS['text_color']
@@ -218,6 +223,19 @@ class CatImageBuilder:
         except IOError:
             logger.warning(f"Font '{font_name}' not found, using default")
             font = ImageFont.load_default()
+        
+        # If position not specified, place text at bottom center
+        if position is None:
+            # Get text bounding box to center it
+            bbox = draw.textbbox((0, 0), text, font=font)
+            text_width = bbox[2] - bbox[0]
+            text_height = bbox[3] - bbox[1]
+            
+            # Calculate position: centered horizontally, near bottom
+            x_offset, y_offset = GENERATION_PARAMS['text_position']
+            x = (img.width - text_width) // 2 + x_offset
+            y = img.height - text_height - y_offset - 5  # 5 pixels from bottom
+            position = (x, y)
         
         draw.text(position, text, font=font, fill=color)
         logger.debug(f"Added text: {text}")

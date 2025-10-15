@@ -59,8 +59,9 @@ class ParentCat(Cat):
         # Apply coloring
         img = CatImageBuilder.apply_color_numpy(img, color_map)
         
-        # Add name
-        CatImageBuilder.add_text(img, self.name)
+        # Add name with generation info
+        display_name = f"{self.name} (Gen {self.generation})"
+        CatImageBuilder.add_text(img, display_name)
         
         self.image = img
         logger.info(f"Generated image for parent cat: {self.name}")
@@ -137,8 +138,9 @@ class KittenCat(Cat):
         # Apply coloring
         img = CatImageBuilder.apply_color_numpy(img, color_map)
         
-        # Add name
-        CatImageBuilder.add_text(img, self.name)
+        # Add name with generation info
+        display_name = f"{self.name} (Gen {self.generation})"
+        CatImageBuilder.add_text(img, display_name)
         
         self.image = img
         logger.info(f"Generated image for kitten: {self.name}")
@@ -148,15 +150,15 @@ class KittenCat(Cat):
 class GrandKittenCat(Cat):
     """Represents a grandkitten with more complex color inheritance"""
     
-    def __init__(self, name: str, parent1: KittenCat, parent2: KittenCat,
+    def __init__(self, name: str, parent1, parent2,
                  parts: Dict[str, Image.Image]):
         """
         Initialize a grandkitten
         
         Args:
             name: Grandkitten's name
-            parent1: First parent (kitten)
-            parent2: Second parent (kitten)
+            parent1: First parent (kitten or grandkitten)
+            parent2: Second parent (kitten or grandkitten)
             parts: Body parts (inherited)
         """
         super().__init__(name, parent1.color, parts)
@@ -164,8 +166,13 @@ class GrandKittenCat(Cat):
         self.parent2 = parent2
         self.colors_used: List[RGB] = []
         self.main_color: Optional[RGB] = None
-        self.generation = 2
-        logger.debug(f"Created grandkitten: {name}")
+        # Determine generation based on parents
+        # If both parents are GrandKittenCat, this is generation 3
+        if isinstance(parent1, GrandKittenCat) and isinstance(parent2, GrandKittenCat):
+            self.generation = 3
+        else:
+            self.generation = 2
+        logger.debug(f"Created grandkitten: {name} (Generation {self.generation})")
     
     def generate_image(self, main_colors_pool: List[RGB]) -> Image.Image:
         """
@@ -211,8 +218,9 @@ class GrandKittenCat(Cat):
         # Apply coloring
         img = CatImageBuilder.apply_color_numpy(img, color_map)
         
-        # Add name
-        CatImageBuilder.add_text(img, self.name)
+        # Add name with generation info
+        display_name = f"{self.name} (Gen {self.generation})"
+        CatImageBuilder.add_text(img, display_name)
         
         self.image = img
         logger.info(f"Generated image for grandkitten: {self.name}")
