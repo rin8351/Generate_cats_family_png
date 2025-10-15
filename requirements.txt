@@ -1,0 +1,17 @@
+# Cat Family Generator Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core image processing
+Pillow>=10.0.0
+
+# Fast array operations for pixel manipulation
+numpy>=1.24.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0  # For test coverage reports
+
+# Optional: For advanced color manipulation
+# colorsys (built-in)
+# typing (built-in for Python 3.5+)
+
