@@ -1,7 +1,5 @@
 # 🐱 Cat Family Generator
 
----
-
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
@@ -223,12 +221,4 @@ Creates the same cat family every time (useful for testing).
 python main.py -v --log debug.log
 ```
 Generates cats while logging detailed information for troubleshooting.
-
----
-
-<div align="center">
-
-**If you found this project interesting, please ⭐ star it!**
-
-</div>
 
