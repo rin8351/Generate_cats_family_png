@@ -1,17 +1,5 @@
 # 🐱 Cat Family Generator
 
-<div align="center">
-
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![PIL](https://img.shields.io/badge/PIL-Pillow-orange.svg)
-
-A sophisticated Python application that generates unique cat families with genetic inheritance of colors and body parts.
-
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [How It Works](#-how-it-works) • [Examples](#-examples)
-
-</div>
-
 ---
 
 ## 📋 Table of Contents
