@@ -240,3 +240,4 @@ def display_cats(layout):
 
 # Пример вызова функции
 display_cats(layout)
+print('done')
