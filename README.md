@@ -1,9 +1,9 @@
 # 🐱 Cat Family Generator
 
-## 📋 Table of Contents
-
+## Example
 ![one_result](cats_family.png)
 
+## 📋 Table of Contents
 - [Overview](#-overview)
 - [Installation](#-installation)
 - [Usage](#-usage)
@@ -11,6 +11,7 @@
 - [How It Works](#-how-it-works)
 - [Configuration](#-configuration)
 - [Examples](#-examples)
+
 
 ## 🎯 Overview
 
