@@ -2,6 +2,8 @@
 
 ## 📋 Table of Contents
 
+![Один из вариантов генерации](cats_family.png)
+
 - [Overview](#-overview)
 - [Installation](#-installation)
 - [Usage](#-usage)
