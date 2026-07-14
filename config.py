@@ -62,10 +62,13 @@ CAT_PARTS_FOLDERS: Dict[str, str] = {
 GENERATION_PARAMS = {
     'background_color': (240, 255, 255),  # Background color for family image
     'font_name': 'arial.ttf',       # Font for cat names
-    'font_size': 26,                # Font size (reduced for longer names with Gen info)
+    'font_size': 22,                # Font size (fits name + parents line)
     'text_color': (0, 0, 0),        # Text color
-    'text_position': (10, 5),       # Text offset (x: from center, y: from bottom)
-    'text_padding_bottom': 35,      # Extra space at bottom for text
+    'text_position': (0, 5),        # Text offset (x: from center, y: from bottom)
+    'text_padding_bottom': 60,      # Extra space at bottom for multiline text
+    'column_gap': 48,               # Gap between pedigree generation columns
+    'connector_color': (80, 80, 80),  # Pedigree link line color
+    'connector_width': 2,           # Pedigree link line width
 }
 
 # Output settings

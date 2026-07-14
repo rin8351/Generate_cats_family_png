@@ -12,9 +12,7 @@ import sys
 import random
 import logging
 import argparse
-from typing import List, Tuple
-
-from PIL import Image
+from typing import List, Tuple, Dict, Any
 
 from config import (
     CATS_COLORS, OUTPUT_SETTINGS, 
@@ -73,7 +71,7 @@ def load_cat_names(filepath: str = NAMES_FILE) -> List[str]:
 def generate_cat_family(
     seed: int = None,
     custom_colors: List[RGB] = None
-) -> Tuple[List[List[Image.Image]], CatFamily]:
+) -> Tuple[Dict[str, Any], CatFamily]:
     """
     Generate a complete cat family tree
     
@@ -82,7 +80,7 @@ def generate_cat_family(
         custom_colors: Optional custom color palette
         
     Returns:
-        Tuple of (layout of cat images, CatFamily object)
+        Tuple of (pedigree image data, CatFamily object)
     """
     if seed is not None:
         random.seed(seed)
@@ -199,26 +197,29 @@ def generate_cat_family(
     
     great_grandkitten_img = great_grandkitten.generate_image(main_colors_pool)
     
-    # Create layout
-    layout = [
-        [parent1_img, parent2_img, kitten1.image, grandkitten1_img, great_grandkitten_img],
-        [parent3_img, parent4_img, kitten2.image],
-        [parent5_img, parent6_img, kitten3.image, grandkitten2_img],
-        [parent7_img, parent8_img, kitten4.image],
-    ]
+    pedigree = {
+        'pairs': [
+            (parent1_img, parent2_img, kitten1.image),
+            (parent3_img, parent4_img, kitten2.image),
+            (parent5_img, parent6_img, kitten3.image),
+            (parent7_img, parent8_img, kitten4.image),
+        ],
+        'grandkittens': [grandkitten1_img, grandkitten2_img],
+        'great_grandkitten': great_grandkitten_img,
+    }
     
-    logging.info(f"\n✓ Generated {len(family.all_cats)} cats across {len(layout)} rows")
+    logging.info(f"\n✓ Generated {len(family.all_cats)} cats across 4 generations")
     
-    return layout, family
+    return pedigree, family
 
 
-def save_family_image(layout: List[List[Image.Image]], 
+def save_family_image(pedigree: Dict[str, Any], 
                      output_path: str = None) -> str:
     """
-    Save the family layout to a file
+    Save the pedigree family image to a file
     
     Args:
-        layout: 2D layout of cat images
+        pedigree: Pedigree structure with pairs, grandkittens, great_grandkitten
         output_path: Output file path
         
     Returns:
@@ -232,7 +233,7 @@ def save_family_image(layout: List[List[Image.Image]],
         os.makedirs(output_dir)
     
     # Generate family image
-    family_img = FamilyLayoutBuilder.create_family_image(layout)
+    family_img = FamilyLayoutBuilder.create_pedigree_image(pedigree)
     
     # Save
     family_img.save(
@@ -295,12 +296,12 @@ Examples:
         logging.info(f"Output: {args.output}")
         
         # Generate family
-        layout, family = generate_cat_family(
+        pedigree, family = generate_cat_family(
             seed=args.seed
         )
         
         # Save image
-        output_path = save_family_image(layout, args.output)
+        output_path = save_family_image(pedigree, args.output)
         
         print(f"\n✨ Success! Generated family with {len(family.all_cats)} cats")
         print(f"📁 Saved to: {output_path}")

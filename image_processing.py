@@ -6,7 +6,7 @@ Handles loading, combining, and coloring cat images with optimized performance
 import os
 import random
 import logging
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Any
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
@@ -203,7 +203,8 @@ class CatImageBuilder:
                  font_size: int = None,
                  color: RGB = None) -> None:
         """
-        Add text to image (modifies image in-place)
+        Add text to image (modifies image in-place).
+        Supports multiline text separated by \\n.
         
         Args:
             img: Image to modify
@@ -226,8 +227,7 @@ class CatImageBuilder:
         
         # If position not specified, place text at bottom center
         if position is None:
-            # Get text bounding box to center it
-            bbox = draw.textbbox((0, 0), text, font=font)
+            bbox = draw.multiline_textbbox((0, 0), text, font=font, align='center')
             text_width = bbox[2] - bbox[0]
             text_height = bbox[3] - bbox[1]
             
@@ -237,49 +237,174 @@ class CatImageBuilder:
             y = img.height - text_height - y_offset - 5  # 5 pixels from bottom
             position = (x, y)
         
-        draw.text(position, text, font=font, fill=color)
-        logger.debug(f"Added text: {text}")
+        draw.multiline_text(position, text, font=font, fill=color, align='center')
+        logger.debug(f"Added text: {text.replace(chr(10), ' | ')}")
 
 
 class FamilyLayoutBuilder:
-    """Builds the final family layout image"""
-    
+    """Builds the final family pedigree image"""
+
     @staticmethod
-    def create_family_image(layout: List[List[Image.Image]], 
-                          background_color: RGB = None) -> Image.Image:
+    def _cell_box(
+        img: Image.Image,
+        cell_x: int,
+        center_y: float,
+        cell_w: int,
+    ) -> Tuple[int, int, int, int]:
+        """Compute centered paste box (x, y, w, h) inside a column cell."""
+        x = cell_x + (cell_w - img.width) // 2
+        y = int(center_y - img.height / 2)
+        return (x, y, img.width, img.height)
+
+    @staticmethod
+    def _draw_bracket(
+        draw: ImageDraw.ImageDraw,
+        parent_a: Tuple[int, int, int, int],
+        parent_b: Tuple[int, int, int, int],
+        child: Tuple[int, int, int, int],
+        color: RGB,
+        line_width: int,
+        stem_x: int = None,
+    ) -> None:
+        """Draw a pedigree bracket from two parents to their child."""
+        ax, ay, aw, ah = parent_a
+        bx, by, bw, bh = parent_b
+        cx, cy, _cw, ch = child
+
+        a_right = (ax + aw, ay + ah // 2)
+        b_right = (bx + bw, by + bh // 2)
+        child_left = (cx, cy + ch // 2)
+        if stem_x is None:
+            stem_x = (a_right[0] + child_left[0]) // 2
+        mid_y = (a_right[1] + b_right[1]) // 2
+
+        draw.line([a_right, (stem_x, a_right[1])], fill=color, width=line_width)
+        draw.line([b_right, (stem_x, b_right[1])], fill=color, width=line_width)
+        draw.line(
+            [(stem_x, a_right[1]), (stem_x, b_right[1])],
+            fill=color,
+            width=line_width,
+        )
+        draw.line([(stem_x, mid_y), child_left], fill=color, width=line_width)
+
+    @staticmethod
+    def create_pedigree_image(pedigree: Dict[str, Any],
+                              background_color: RGB = None) -> Image.Image:
         """
-        Create a family tree image from a 2D layout of cat images
-        
-        Args:
-            layout: 2D list of cat images (rows and columns)
-            background_color: Background color for empty spaces
-            
-        Returns:
-            Combined family image
+        Create a left-to-right pedigree tree with connector lines.
+
+        Expected pedigree keys:
+            pairs: list of (parent1_img, parent2_img, kitten_img) x4
+            grandkittens: [gk1_img, gk2_img]
+            great_grandkitten: ggk_img
         """
         background_color = background_color or GENERATION_PARAMS['background_color']
-        
-        if not layout or not layout[0]:
-            raise ValueError("Layout cannot be empty")
-        
-        # Calculate dimensions
-        max_width = max(cat.width for row in layout for cat in row)
-        max_height = max(cat.height for row in layout for cat in row)
-        total_width = max_width * max(len(row) for row in layout)
-        total_height = max_height * len(layout)
-        
-        # Create canvas
-        combined_img = Image.new('RGB', (total_width, total_height), background_color)
-        
-        # Place cats in the layout
-        y_offset = 0
-        for row in layout:
-            x_offset = 0
-            for cat in row:
-                combined_img.paste(cat, (x_offset, y_offset))
-                x_offset += cat.width
-            y_offset += max_height
-        
-        logger.info(f"Created family image: {total_width}x{total_height} pixels")
-        return combined_img
+        column_gap = GENERATION_PARAMS.get('column_gap', 48)
+        connector_color = GENERATION_PARAMS.get('connector_color', (80, 80, 80))
+        connector_width = GENERATION_PARAMS.get('connector_width', 2)
+
+        pairs = pedigree['pairs']
+        grandkittens = pedigree['grandkittens']
+        great_grandkitten = pedigree['great_grandkitten']
+
+        if len(pairs) != 4 or len(grandkittens) != 2:
+            raise ValueError("Pedigree must have 4 parent pairs and 2 grandkittens")
+
+        all_images = []
+        for p1, p2, kitten in pairs:
+            all_images.extend([p1, p2, kitten])
+        all_images.extend(grandkittens)
+        all_images.append(great_grandkitten)
+
+        cell_w = max(img.width for img in all_images)
+        cell_h = max(img.height for img in all_images)
+        num_slots = 8
+        num_columns = 4
+
+        total_width = num_columns * cell_w + (num_columns - 1) * column_gap
+        total_height = num_slots * cell_h
+
+        canvas = Image.new('RGB', (total_width, total_height), background_color)
+        draw = ImageDraw.Draw(canvas)
+
+        def col_x(col: int) -> int:
+            return col * (cell_w + column_gap)
+
+        def gap_stem_x(after_col: int) -> int:
+            """X in the middle of the gap after the given column."""
+            return col_x(after_col) + cell_w + column_gap // 2
+
+        def slot_center_y(slot: float) -> float:
+            return (slot + 0.5) * cell_h
+
+        # Compute boxes for all cats (Gen 0 parents in slots 0..7)
+        parent_boxes = []
+        for pair_idx, (p1, p2, _kitten) in enumerate(pairs):
+            slot_a = pair_idx * 2
+            slot_b = slot_a + 1
+            box_a = FamilyLayoutBuilder._cell_box(
+                p1, col_x(0), slot_center_y(slot_a), cell_w
+            )
+            box_b = FamilyLayoutBuilder._cell_box(
+                p2, col_x(0), slot_center_y(slot_b), cell_w
+            )
+            parent_boxes.append((box_a, box_b))
+
+        kitten_boxes = []
+        for pair_idx, (_p1, _p2, kitten) in enumerate(pairs):
+            slot_mid = pair_idx * 2 + 0.5
+            kitten_boxes.append(
+                FamilyLayoutBuilder._cell_box(
+                    kitten, col_x(1), slot_center_y(slot_mid), cell_w
+                )
+            )
+
+        # GK1 from kittens 0+1, GK2 from 2+3
+        gk_boxes = []
+        gk_parent_slots = [(0.5, 2.5), (4.5, 6.5)]
+        for gk_idx, gk_img in enumerate(grandkittens):
+            s1, s2 = gk_parent_slots[gk_idx]
+            center = (slot_center_y(s1) + slot_center_y(s2)) / 2
+            gk_boxes.append(
+                FamilyLayoutBuilder._cell_box(gk_img, col_x(2), center, cell_w)
+            )
+
+        ggk_center = (slot_center_y(1.5) + slot_center_y(5.5)) / 2
+        ggk_box = FamilyLayoutBuilder._cell_box(
+            great_grandkitten, col_x(3), ggk_center, cell_w
+        )
+
+        # Draw connectors first (in gaps), then paste cats on top
+        for pair_idx, (box_a, box_b) in enumerate(parent_boxes):
+            FamilyLayoutBuilder._draw_bracket(
+                draw, box_a, box_b, kitten_boxes[pair_idx],
+                connector_color, connector_width, gap_stem_x(0),
+            )
+        FamilyLayoutBuilder._draw_bracket(
+            draw, kitten_boxes[0], kitten_boxes[1], gk_boxes[0],
+            connector_color, connector_width, gap_stem_x(1),
+        )
+        FamilyLayoutBuilder._draw_bracket(
+            draw, kitten_boxes[2], kitten_boxes[3], gk_boxes[1],
+            connector_color, connector_width, gap_stem_x(1),
+        )
+        FamilyLayoutBuilder._draw_bracket(
+            draw, gk_boxes[0], gk_boxes[1], ggk_box,
+            connector_color, connector_width, gap_stem_x(2),
+        )
+
+        placements = []
+        for (p1, p2, kitten), (box_a, box_b), k_box in zip(
+            pairs, parent_boxes, kitten_boxes
+        ):
+            placements.extend([(p1, box_a), (p2, box_b), (kitten, k_box)])
+        for gk_img, gk_box in zip(grandkittens, gk_boxes):
+            placements.append((gk_img, gk_box))
+        placements.append((great_grandkitten, ggk_box))
+
+        for img, (x, y, _w, _h) in placements:
+            canvas.paste(img, (x, y))
+
+        logger.info(f"Created pedigree image: {total_width}x{total_height} pixels")
+        return canvas
 

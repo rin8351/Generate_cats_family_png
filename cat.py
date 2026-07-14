@@ -138,8 +138,11 @@ class KittenCat(Cat):
         # Apply coloring
         img = CatImageBuilder.apply_color_numpy(img, color_map)
         
-        # Add name with generation info
-        display_name = f"{self.name} (Gen {self.generation})"
+        # Add name with generation info and parent names
+        display_name = (
+            f"{self.name} (Gen {self.generation})\n"
+            f"parents: {self.parent1.name} + {self.parent2.name}"
+        )
         CatImageBuilder.add_text(img, display_name)
         
         self.image = img
@@ -218,8 +221,11 @@ class GrandKittenCat(Cat):
         # Apply coloring
         img = CatImageBuilder.apply_color_numpy(img, color_map)
         
-        # Add name with generation info
-        display_name = f"{self.name} (Gen {self.generation})"
+        # Add name with generation info and parent names
+        display_name = (
+            f"{self.name} (Gen {self.generation})\n"
+            f"parents: {self.parent1.name} + {self.parent2.name}"
+        )
         CatImageBuilder.add_text(img, display_name)
         
         self.image = img
