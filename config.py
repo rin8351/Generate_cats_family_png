@@ -64,7 +64,7 @@ GENERATION_PARAMS = {
     'font_name': 'arial.ttf',       # Font for cat names
     'font_size': 26,                # Font size (reduced for longer names with Gen info)
     'text_color': (0, 0, 0),        # Text color
-    'text_position': (10, 5),       # Text position on cat image (x: left offset, y: top offset)
+    'text_position': (10, 5),       # Text offset (x: from center, y: from bottom)
     'text_padding_bottom': 35,      # Extra space at bottom for text
 }
 

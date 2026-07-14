@@ -2,7 +2,6 @@
 Simplified tests for the Cat Family Generator project
 Tests only the essential requirements for the project to work correctly
 """
-import pytest
 from pathlib import Path
 from config import CATS_COLORS, GRAY_COLORS, CAT_PARTS_FOLDERS, NAMES_FILE
 

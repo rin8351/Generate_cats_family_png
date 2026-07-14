@@ -30,8 +30,8 @@ The Cat Family Generator creates multi-generational cat families by combining ra
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/cat-family-generator.git
-   cd cat-family-generator
+   git clone https://github.com/rin8351/Generate_cats_family_png.git
+   cd Generate_cats_family_png
    ```
 
 2. **Install dependencies**
@@ -91,27 +91,28 @@ python main.py -o output/family.png --seed 123 -v --log cats.log
 | `--seed` | Random seed for reproducibility | Random |
 | `-v`, `--verbose` | Enable debug logging | Off |
 | `--log` | Save logs to file | None |
-| `--pairs` | Number of parent pairs | 2 |
 | `-h`, `--help` | Show help message | - |
 
 ## 📁 Project Structure
 
 ```
-cat-family-generator/
+Generate_cats_family_png/
 ├── main.py                 # Main entry point with CLI
 ├── cat.py                  # Cat classes and genetics logic
 ├── image_processing.py     # Image manipulation and combining
-├── config.py              # Configuration and constants
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-├── .gitignore           # Git ignore patterns
-├── cats_name.TXT        # List of cat names
-├── base.png             # Base cat template
-├── body/                # Body part images (1-7.png)
-├── ear/                 # Ear images (1-7.png)
-├── eyes/                # Eye images (1-8.png)
-├── legs/                # Leg images (1-7.png)
-└── tail/                # Tail images (1-8.png)
+├── config.py               # Configuration and constants
+├── requirements.txt        # Python dependencies
+├── README.md               # This file
+├── .gitignore              # Git ignore patterns
+├── cats_name.TXT           # List of cat names
+├── cats_family.png         # Example output
+├── base.png                # Base cat template
+├── body/                   # Body part images (1-7.png)
+├── ear/                    # Ear images (1-7.png)
+├── eyes/                   # Eye images (1-8.png)
+├── legs/                   # Leg images (1-7.png)
+├── tail/                   # Tail images (1-8.png)
+└── tests/                  # Project tests
 ```
 
 ## 🔬 How It Works
@@ -160,9 +161,9 @@ Original images use grayscale templates. Colors are applied by:
 - Select 2-3 colors for variation
 - Main body gets a specific color from ancestors
 
-#### **Generation 3: Great-Grandkittens**
-- Ultimate genetic combination
-- Multi-colored with complex patterns
+#### **Generation 3: Great-Grandkitten**
+- Same inheritance rules as Generation 2
+- Built from the two grandkittens
 
 ### 5. **Family Layout**
 The final image arranges cats in a family tree pattern:
