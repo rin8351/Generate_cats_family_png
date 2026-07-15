@@ -7,6 +7,7 @@
 - [Overview](#-overview)
 - [Installation](#-installation)
 - [Usage](#-usage)
+- [Testing](#-testing)
 - [Project Structure](#-project-structure)
 - [How It Works](#-how-it-works)
 - [Configuration](#-configuration)
@@ -22,12 +23,14 @@ The Cat Family Generator creates multi-generational cat families by combining ra
 ## How It Works
 
 ### 1. **Image Loading**
-The `ImageLoader` class validates and loads cat body parts from folders:
-- Ears (7 variants)
-- Eyes (8 variants)
-- Body (7 variants)
-- Tail (8 variants)
-- Legs (7 variants)
+The `ImageLoader` class validates and loads cat body parts from folders under `parts/`:
+- Ears (`parts/ear/`)
+- Eyes (`parts/eyes/`)
+- Body (`parts/body/`)
+- Tail (`parts/tail/`)
+- Legs (`parts/legs/`)
+
+You can draw and add more PNG variants into any of these folders — they will be picked up automatically.
 
 ### 2. **Part Combination**
 `CatImageBuilder` arranges parts vertically:
@@ -91,39 +94,30 @@ Parent7 ──┐             │
 Parent8 ──┘
 `
 
-### 6. **Family Tree Structure**
 
-**Family Relationships:**
-- **Generation 0**: 8 parents (4 pairs)
-  - Parent1 ♥ Parent2 → Kitten1
-  - Parent3 ♥ Parent4 → Kitten2
-  - Parent5 ♥ Parent6 → Kitten3
-  - Parent7 ♥ Parent8 → Kitten4
 
-- **Generation 1**: 4 kittens (forming 2 pairs)
-  - Kitten1 ♥ Kitten2 → GrandKitten1
-  - Kitten3 ♥ Kitten4 → GrandKitten2
-
-- **Generation 2**: 2 grandkittens (forming 1 pair)
-  - GrandKitten1 ♥ GrandKitten2 → GreatGrandKitten
-
-- **Generation 3**: 1 great-grandkitten (final descendant)
-
-Labels under each cat:
-- Parents: \Lucky (Gen 0)- Descendants: name + generation, plus \parents: Mimi + Max
 ## ⚙️ Configuration
 
-Edit `config.py` to customize:
+### Color Palette (`cats_colors.py`)
 
-### Color Palette
+Cat colors live in a separate file: `cats_colors.py`. You can extend the list with any colors you like. Use RGB tuples in the form `(R, G, B)` with values from 0 to 255. The built-in palette is mostly soft pastel shades, but you can add brighter or darker colors as well.
+
 ```python
 CATS_COLORS = [
-    (255, 0, 0),    # Add your RGB colors
+    (255, 193, 204),  # example pastel pink
+    (255, 0, 0),      # add your own RGB colors
     (0, 255, 0),
     # ...
 ]
 ```
 
+### Cat Names (`cats_name.TXT`)
+
+Cat names are taken from `cats_name.TXT`. Put any names you like there — one name per line. They will be used when labeling cats in the family image.
+
+### Other settings (`config.py`)
+
+Edit `config.py` for paths, fonts, layout, and output options.
 
 ### Command-Line Options
 
@@ -142,21 +136,26 @@ Generate_cats_family_png/
 ├── main.py                 # Main entry point with CLI
 ├── cat.py                  # Cat classes and genetics logic
 ├── image_processing.py     # Image manipulation and combining
-├── config.py               # Configuration and constants
+├── config.py               # Paths and generation parameters
+├── cats_colors.py          # Cat color palette (edit to add colors)
 ├── requirements.txt        # Python dependencies
 ├── README.md               # This file
 ├── .gitignore              # Git ignore patterns
 ├── cats_name.TXT           # List of cat names
 ├── cats_family.png         # Example output
 ├── base.png                # Base cat template
-├── body/                   # Body part images (1-7.png)
-├── ear/                    # Ear images (1-7.png)
-├── eyes/                   # Eye images (1-8.png)
-├── legs/                   # Leg images (1-7.png)
-├── tail/                   # Tail images (1-8.png)
+├── parts/                  # Cat body part images
+│   ├── body/               # Body variants (PNG)
+│   ├── ear/                # Ear variants (PNG)
+│   ├── eyes/               # Eye variants (PNG)
+│   ├── legs/               # Leg variants (PNG)
+│   └── tail/               # Tail variants (PNG)
 └── tests/                  # Project tests
 ```
 
+### Custom body parts
+
+Want more variety? Draw your own parts and drop PNG files into the matching folder under `parts/` (for example `parts/ear/8.png`). Use the same grayscale style as the existing assets so coloring still works. New files are included automatically — no code changes needed.
 ## Installation
 
 ### Prerequisites
@@ -181,6 +180,22 @@ Generate_cats_family_png/
    ```bash
    python main.py --help
    ```
+
+## Testing
+
+Tests live in `tests/` and are run with [pytest](https://pytest.org/) (configured in `pytest.ini`). They are not called from the generator itself — run them separately:
+
+```bash
+pytest
+```
+
+Or explicitly:
+
+```bash
+pytest tests/ -v
+```
+
+On every push and pull request to `main`/`master`, GitHub Actions runs the same suite (see `.github/workflows/tests.yml`).
 
 ## Usage
 

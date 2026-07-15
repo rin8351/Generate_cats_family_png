@@ -12,7 +12,6 @@ eggs/
 .eggs/
 lib/
 lib64/
-parts/
 sdist/
 var/
 wheels/
@@ -36,6 +35,13 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Testing / coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+coverage.xml
 
 # Project specific
 *.log

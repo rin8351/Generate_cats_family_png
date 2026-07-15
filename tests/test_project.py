@@ -3,7 +3,8 @@ Simplified tests for the Cat Family Generator project
 Tests only the essential requirements for the project to work correctly
 """
 from pathlib import Path
-from config import CATS_COLORS, GRAY_COLORS, CAT_PARTS_FOLDERS, NAMES_FILE
+from cats_colors import CATS_COLORS
+from config import GRAY_COLORS, CAT_PARTS_FOLDERS, NAMES_FILE
 
 
 class TestProjectStructure:
@@ -11,18 +12,15 @@ class TestProjectStructure:
     
     def test_required_folders_exist_and_not_empty(self):
         """Test that required body part folders exist and contain images"""
-        required_folders = ['ear', 'eyes', 'body', 'tail', 'legs']
-        
         # Check there are at least 5 folders configured
         assert len(CAT_PARTS_FOLDERS) >= 5, "Should have at least 5 body part folders"
-        
-        # Check each required folder exists and is not empty
-        for folder_name in required_folders:
+
+        # Check each configured folder exists and is not empty
+        for part_name, folder_name in CAT_PARTS_FOLDERS.items():
             folder_path = Path(folder_name)
-            assert folder_path.exists(), f"Folder '{folder_name}' does not exist"
+            assert folder_path.exists(), f"Folder '{folder_name}' ({part_name}) does not exist"
             assert folder_path.is_dir(), f"'{folder_name}' is not a directory"
-            
-            # Check folder is not empty
+
             files = list(folder_path.glob('*.png'))
             assert len(files) > 0, f"Folder '{folder_name}' is empty"
     

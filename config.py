@@ -1,9 +1,11 @@
 """
 Configuration file for Cat Family Generator
-Contains all color palettes, paths, and generation parameters
+Contains paths and generation parameters
 """
 
 from typing import List, Tuple, Dict
+
+from cats_colors import CATS_COLORS  # noqa: F401 — re-exported for convenience
 
 # Color definitions
 RGB = Tuple[int, int, int]
@@ -16,46 +18,13 @@ GRAY_COLORS: List[RGB] = [
     (247, 247, 247), (252, 252, 252)  # (252, 252, 252) is the main body color
 ]
 
-# Cat color palette - vibrant and pastel colors
-CATS_COLORS: List[RGB] = [
-    # Vibrant colors
-    (255, 0, 0),      # Red
-    (0, 0, 255),      # Blue
-    (0, 128, 0),      # Green
-    (255, 255, 0),    # Yellow
-    (255, 165, 0),    # Orange
-    (255, 192, 203),  # Pink
-    (128, 0, 128),    # Purple
-    (165, 42, 42),    # Brown
-    (128, 128, 128),  # Gray
-    (50, 205, 50),    # Lime
-    (0, 255, 255),    # Cyan
-    (255, 0, 255),    # Magenta
-    (128, 128, 0),    # Olive
-    # Pastel colors
-    (230, 230, 250),  # Lavender
-    (135, 206, 250),  # Light Sky Blue
-    (152, 251, 152),  # Pale Green
-    (255, 218, 185),  # Peach
-    (255, 182, 193),  # Light Pink
-    (240, 128, 128),  # Light Coral
-    (255, 255, 224),  # Light Yellow
-    (216, 191, 216),  # Thistle
-    (245, 245, 220),  # Beige
-    (175, 238, 238),  # Pale Turquoise
-    (255, 228, 225),  # Misty Rose
-    (250, 250, 210),  # Light Goldenrod
-    (255, 229, 180),  # Peach Puff
-    (245, 255, 250),  # Mint Cream
-]
-
-# Folder paths for cat parts
+# Folder paths for cat parts (all under parts/)
 CAT_PARTS_FOLDERS: Dict[str, str] = {
-    'ear': 'ear',
-    'eyes': 'eyes',
-    'body': 'body',
-    'tail': 'tail',
-    'legs': 'legs',
+    'ear': 'parts/ear',
+    'eyes': 'parts/eyes',
+    'body': 'parts/body',
+    'tail': 'parts/tail',
+    'legs': 'parts/legs',
 }
 
 # Generation parameters
@@ -87,4 +56,3 @@ LOGGING_CONFIG = {
     'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     'filename': 'cat_generator.log',
 }
-

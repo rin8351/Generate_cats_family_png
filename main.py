@@ -14,8 +14,9 @@ import logging
 import argparse
 from typing import List, Tuple, Dict, Any
 
+from cats_colors import CATS_COLORS
 from config import (
-    CATS_COLORS, OUTPUT_SETTINGS, 
+    OUTPUT_SETTINGS,
     NAMES_FILE, LOGGING_CONFIG, RGB
 )
 from image_processing import ImageLoader, CatImageBuilder, FamilyLayoutBuilder
