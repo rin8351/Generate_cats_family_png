@@ -1,0 +1,379 @@
+{
+  "seeds": [
+    {
+      "id": 1,
+      "cats": [
+        {
+          "name": "Tigger",
+          "color": [
+            135,
+            206,
+            250
+          ],
+          "parts": {
+            "ear": "ear_2",
+            "eyes": "eyes_5",
+            "body": "body_1",
+            "tail": "tail_5",
+            "legs": "legs_4"
+          }
+        },
+        {
+          "name": "Luna",
+          "color": [
+            207,
+            170,
+            255
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_1",
+            "body": "body_4",
+            "tail": "tail_7",
+            "legs": "legs_4"
+          }
+        },
+        {
+          "name": "Cali",
+          "color": [
+            216,
+            191,
+            216
+          ],
+          "parts": {
+            "ear": "ear_1",
+            "eyes": "eyes_7",
+            "body": "body_1",
+            "tail": "tail_4",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Chauncey",
+          "color": [
+            214,
+            224,
+            255
+          ],
+          "parts": {
+            "ear": "ear_5",
+            "eyes": "eyes_7",
+            "body": "body_3",
+            "tail": "tail_2",
+            "legs": "legs_5"
+          }
+        },
+        {
+          "name": "Snowball",
+          "color": [
+            255,
+            255,
+            153
+          ],
+          "parts": {
+            "ear": "ear_7",
+            "eyes": "eyes_7",
+            "body": "body_3",
+            "tail": "tail_1",
+            "legs": "legs_2"
+          }
+        },
+        {
+          "name": "Cleo",
+          "color": [
+            255,
+            209,
+            220
+          ],
+          "parts": {
+            "ear": "ear_3",
+            "eyes": "eyes_1",
+            "body": "body_1",
+            "tail": "tail_1",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Luna",
+          "color": [
+            245,
+            245,
+            220
+          ],
+          "parts": {
+            "ear": "ear_7",
+            "eyes": "eyes_3",
+            "body": "body_2",
+            "tail": "tail_1",
+            "legs": "legs_3"
+          }
+        },
+        {
+          "name": "Smokey",
+          "color": [
+            255,
+            229,
+            180
+          ],
+          "parts": {
+            "ear": "ear_2",
+            "eyes": "eyes_2",
+            "body": "body_2",
+            "tail": "tail_1",
+            "legs": "legs_4"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "cats": [
+        {
+          "name": "Daisy",
+          "color": [
+            220,
+            119,
+            214
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_7",
+            "body": "body_4",
+            "tail": "tail_4",
+            "legs": "legs_6"
+          }
+        },
+        {
+          "name": "Salem",
+          "color": [
+            255,
+            243,
+            222
+          ],
+          "parts": {
+            "ear": "ear_7",
+            "eyes": "eyes_3",
+            "body": "body_2",
+            "tail": "tail_5",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Smoky",
+          "color": [
+            196,
+            222,
+            156
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_2",
+            "body": "body_4",
+            "tail": "tail_4",
+            "legs": "legs_2"
+          }
+        },
+        {
+          "name": "Daisy",
+          "color": [
+            168,
+            230,
+            161
+          ],
+          "parts": {
+            "ear": "ear_1",
+            "eyes": "eyes_6",
+            "body": "body_4",
+            "tail": "tail_8",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Midnight",
+          "color": [
+            255,
+            255,
+            153
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_8",
+            "body": "body_4",
+            "tail": "tail_1",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Toby",
+          "color": [
+            255,
+            243,
+            222
+          ],
+          "parts": {
+            "ear": "ear_4",
+            "eyes": "eyes_3",
+            "body": "body_5",
+            "tail": "tail_8",
+            "legs": "legs_2"
+          }
+        },
+        {
+          "name": "Cinnamon",
+          "color": [
+            255,
+            209,
+            220
+          ],
+          "parts": {
+            "ear": "ear_3",
+            "eyes": "eyes_8",
+            "body": "body_3",
+            "tail": "tail_4",
+            "legs": "legs_4"
+          }
+        },
+        {
+          "name": "Misty",
+          "color": [
+            255,
+            209,
+            248
+          ],
+          "parts": {
+            "ear": "ear_4",
+            "eyes": "eyes_7",
+            "body": "body_2",
+            "tail": "tail_5",
+            "legs": "legs_2"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "cats": [
+        {
+          "name": "Mittens",
+          "color": [
+            245,
+            245,
+            220
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_1",
+            "body": "body_2",
+            "tail": "tail_6",
+            "legs": "legs_4"
+          }
+        },
+        {
+          "name": "Tiger",
+          "color": [
+            240,
+            233,
+            254
+          ],
+          "parts": {
+            "ear": "ear_2",
+            "eyes": "eyes_1",
+            "body": "body_5",
+            "tail": "tail_4",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Lucky",
+          "color": [
+            255,
+            209,
+            248
+          ],
+          "parts": {
+            "ear": "ear_5",
+            "eyes": "eyes_3",
+            "body": "body_5",
+            "tail": "tail_7",
+            "legs": "legs_4"
+          }
+        },
+        {
+          "name": "Daisy",
+          "color": [
+            92,
+            225,
+            77
+          ],
+          "parts": {
+            "ear": "ear_4",
+            "eyes": "eyes_1",
+            "body": "body_3",
+            "tail": "tail_8",
+            "legs": "legs_6"
+          }
+        },
+        {
+          "name": "Pumpkin",
+          "color": [
+            255,
+            228,
+            181
+          ],
+          "parts": {
+            "ear": "ear_3",
+            "eyes": "eyes_6",
+            "body": "body_2",
+            "tail": "tail_2",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Simba",
+          "color": [
+            255,
+            255,
+            153
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_6",
+            "body": "body_3",
+            "tail": "tail_3",
+            "legs": "legs_2"
+          }
+        },
+        {
+          "name": "Toby",
+          "color": [
+            234,
+            255,
+            223
+          ],
+          "parts": {
+            "ear": "ear_5",
+            "eyes": "eyes_2",
+            "body": "body_3",
+            "tail": "tail_3",
+            "legs": "legs_5"
+          }
+        },
+        {
+          "name": "Snowball",
+          "color": [
+            153,
+            247,
+            230
+          ],
+          "parts": {
+            "ear": "ear_5",
+            "eyes": "eyes_8",
+            "body": "body_2",
+            "tail": "tail_5",
+            "legs": "legs_7"
+          }
+        }
+      ]
+    }
+  ]
+}

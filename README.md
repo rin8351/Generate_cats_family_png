@@ -10,13 +10,14 @@
 - [Testing](#-testing)
 - [Project Structure](#-project-structure)
 - [How It Works](#-how-it-works)
-- [Configuration](#-configuration)
+- [Genetics](#-genetics)
+- [Configuration](#️-configuration)
 - [Examples](#-examples)
 
 
 ## Overview
 
-The Cat Family Generator creates multi-generational cat families by combining randomly selected body parts (ears, eyes, body, tail, legs) and applying genetic color inheritance rules. Each generation inherits traits from its parents, creating unique and colorful cat families!
+The Cat Family Generator creates multi-generational cat families by combining body parts (ears, eyes, body, tail, legs) and applying a **strength-based genetics** system for colors and shapes. Traits are inherited from parents across four generations; stronger genes win more often and accumulate power over time.
 
 
 
@@ -49,33 +50,13 @@ You can draw and add more PNG variants into any of these folders — they will b
 ### 3. **Color Application**
 Original images use grayscale templates. Colors are applied by:
 1. Detecting gray shades in the template
-2. Mapping each shade to a genetic color
+2. Mapping each shade to a genetic color (strongest → main body `(252, 252, 252)`)
 3. Using NumPy for efficient pixel replacement
 
-### 4. **Genetic Inheritance**
-
-#### **Generation 0: Parents**
-- Single solid color
-- Random body parts
-
-#### **Generation 1: Kittens**
-- Inherit body parts randomly from each parent (50/50 chance)
-- Each gray shade gets a random parent color
-
-#### **Generation 2: Grandkittens**
-- Inherit parts from kitten parents
-- Combine color pools from both parents
-- Select 2-3 colors for variation
-- Main body gets a specific color from ancestors
-
-#### **Generation 3: Great-Grandkitten**
-- Same inheritance rules as Generation 2
-- Built from the two grandkittens
-
-### 5. **Family Layout**
+### 4. **Family Layout**
 The final image is a left-to-right pedigree: generations are columns, children sit vertically between their parents, and bracket lines connect each pair to their child.
 
-`
+```
 Gen 0          Gen 1         Gen 2          Gen 3
 ────────       ──────        ──────         ──────
 Parent1 ──┐
@@ -92,8 +73,37 @@ Parent6 ──┘             │                  │
 Parent7 ──┐             │
           ├── Kitten4 ──┘
 Parent8 ──┘
-`
+```
 
+Each cat is labeled with its name, generation, and a legend of its color genes (swatch + strength).
+
+
+## 🧬 Genetics
+
+Inheritance is **not** pure random anymore. Colors and body parts are genes with
+**strength** that grows when they win, match in both parents, or (for colors)
+paint the main fur. By Gen 2–3, strong traits dominate.
+
+**Full write-up:** [`GENETICS.md`](GENETICS.md)
+
+### Quick knobs (`config.py`)
+
+The main control for how many colors a kitten carries:
+
+```python
+CHILD_COLOR_COUNT_WEIGHTS = {
+    2: 10,   # 10%
+    3: 25,   # 25%
+    4: 40,   # 40%
+    5: 20,   # 20%
+    6: 5,    # 5%
+}
+```
+
+Edit these percentages freely (normalized if they do not sum to 100; `0` disables a count).
+
+Other genetics settings live in `GENETICS_PARAMS` (strength bonuses, spillover,
+mutation chance, etc.) — see [`GENETICS.md`](GENETICS.md).
 
 
 ## ⚙️ Configuration
@@ -117,14 +127,17 @@ Cat names are taken from `cats_name.TXT`. Put any names you like there — one n
 
 ### Other settings (`config.py`)
 
-Edit `config.py` for paths, fonts, layout, and output options.
+Edit `config.py` for paths, fonts, layout, genetics, and output options. Gen 0
+snapshots can be saved/reloaded via `seeds.json`.
 
 ### Command-Line Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
 | `-o`, `--output` | Output filename | `cats_family.png` |
-| `--seed` | Random seed for reproducibility | Random |
+| `--load-seed ID` | Replay Gen 0 from `seeds.json` (kids re-rolled) | — |
+| `--list-seeds` | List saved Gen 0 seeds and exit | — |
+| `--no-save-seed` | Do not append a new random Gen 0 to seeds | Off |
 | `-v`, `--verbose` | Enable debug logging | Off |
 | `--log` | Save logs to file | None |
 | `-h`, `--help` | Show help message | - |
@@ -136,14 +149,15 @@ Generate_cats_family_png/
 ├── main.py                 # Main entry point with CLI
 ├── cat.py                  # Cat classes and genetics logic
 ├── image_processing.py     # Image manipulation and combining
-├── config.py               # Paths and generation parameters
+├── config.py               # Paths, layout, genetics knobs
 ├── cats_colors.py          # Cat color palette (edit to add colors)
+├── seeds.py / seeds.json   # Save / reload Gen 0 founders
 ├── requirements.txt        # Python dependencies
 ├── README.md               # This file
+├── GENETICS.md             # Genetics system (strength, weights, mutation)
 ├── .gitignore              # Git ignore patterns
 ├── cats_name.TXT           # List of cat names
 ├── cats_family.png         # Example output
-├── base.png                # Base cat template
 ├── parts/                  # Cat body part images
 │   ├── body/               # Body variants (PNG)
 │   ├── ear/                # Ear variants (PNG)
@@ -216,9 +230,14 @@ This creates `cats_family.png` in the current directory.
 python main.py -o my_awesome_cats.png
 ```
 
-**Reproducible generation with seed:**
+**Replay Gen 0 from a saved seed** (later generations still re-roll):
 ```bash
-python main.py --seed 42
+python main.py --load-seed 3
+```
+
+**List saved Gen 0 seeds:**
+```bash
+python main.py --list-seeds
 ```
 
 **Verbose logging:**
@@ -231,32 +250,10 @@ python main.py -v
 python main.py --log generation.log
 ```
 
-**All options combined:**
-```bash
-python main.py -o output/family.png --seed 123 -v --log cats.log
-```
+### Generation / genetics parameters
 
-
-### Generation Parameters
-```python
-GENERATION_PARAMS = {
-    'background_color': (240, 255, 255),  # Background color
-    'font_name': 'arial.ttf',             # Font for cat names
-    'font_size': 22,                      # Font size (name + parents line)
-    'text_color': (0, 0, 0),              # Text color (black)
-    'text_position': (0, 5),              # Text offset (x: from center, y: from bottom)
-    'text_padding_bottom': 60,            # Extra space at bottom for multiline text
-    'column_gap': 48,                     # Gap between pedigree columns (for lines)
-    'connector_color': (80, 80, 80),      # Pedigree link color
-    'connector_width': 2,                 # Pedigree link thickness
-}
-```
-
-**Text Position Parameters:**
-- `text_position`: `(x, y)` offset for fine-tuning text placement
-  - `x`: horizontal offset from center (positive = right, negative = left)
-  - `y`: vertical offset from bottom (higher value = more space from bottom)
-- `text_padding_bottom`: extra white space below each cat for name / parents labels
+Layout and fonts: `GENERATION_PARAMS` in `config.py`.  
+Genetics (including **`CHILD_COLOR_COUNT_WEIGHTS`**): see [`GENETICS.md`](GENETICS.md).
 
 ### Output Settings
 ```python
@@ -273,13 +270,13 @@ OUTPUT_SETTINGS = {
 ```bash
 python main.py
 ```
-Generates a random cat family with varied colors and patterns.
+Generates a random cat family (Gen 0 is auto-saved to `seeds.json`).
 
-### Example 2: Reproducible Output
+### Example 2: Replay a Gen 0 seed
 ```bash
-python main.py --seed 42 -o reproducible_cats.png
+python main.py --load-seed 3 -o family_from_seed3.png
 ```
-Creates the same cat family every time (useful for testing).
+Same founders; Gen 1–3 are re-rolled by inheritance.
 
 ### Example 3: Debug Mode
 ```bash

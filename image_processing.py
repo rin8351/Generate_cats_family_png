@@ -6,7 +6,7 @@ Handles loading, combining, and coloring cat images with optimized performance
 import os
 import random
 import logging
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Tuple, Any, Sequence
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
@@ -42,71 +42,107 @@ class ImageLoader:
                 raise ValueError(f"Folder '{folder_path}' is empty")
         logger.info("All cat part folders validated successfully")
     
-    def load_images_from_folder(self, folder_path: str) -> List[Image.Image]:
+    def load_images_from_folder(self, folder_path: str) -> Dict[str, Image.Image]:
         """
-        Load all PNG images from a folder
-        
+        Load all PNG images from a folder, keyed by filename stem.
+
+        Example: parts/body/3.png -> {"3": <Image>}
+
         Args:
             folder_path: Path to folder containing images
-            
+
         Returns:
-            List of loaded PIL Images in RGB format
+            Mapping of part file id -> PIL Image (RGB)
         """
-        images = []
+        images: Dict[str, Image.Image] = {}
         full_path = os.path.join(self.base_path, folder_path)
-        
+
         for filename in sorted(os.listdir(full_path)):
             if filename.lower().endswith('.png'):
                 img_path = os.path.join(full_path, filename)
+                file_id = os.path.splitext(filename)[0]
                 try:
                     with Image.open(img_path) as img:
-                        rgb_img = img.convert('RGB')
-                        images.append(rgb_img.copy())
+                        images[file_id] = img.convert('RGB').copy()
                     logger.debug(f"Loaded image: {filename}")
                 except IOError as e:
                     logger.warning(f"Cannot load image {filename}: {e}")
-        
+
         if not images:
             raise ValueError(f"No valid images found in {folder_path}")
-        
+
         logger.info(f"Loaded {len(images)} images from {folder_path}")
         return images
-    
-    def load_all_parts(self) -> Dict[str, List[Image.Image]]:
+
+    def load_all_parts(self) -> Dict[str, Dict[str, Image.Image]]:
         """
         Load all cat parts from configured folders
-        
+
         Returns:
-            Dictionary mapping part names to lists of images
+            Mapping of part name -> {file_id: Image}
+            e.g. {"body": {"1": <img>, "2": <img>}, ...}
         """
         parts_images = {}
         for part_name, folder_path in CAT_PARTS_FOLDERS.items():
             parts_images[part_name] = self.load_images_from_folder(folder_path)
-        
+
         logger.info(f"Loaded all {len(parts_images)} cat parts")
         return parts_images
 
 
 class CatImageBuilder:
     """Builds cat images by combining parts and applying colors"""
-    
+
     @staticmethod
-    def choose_random_parts(parts_images: Dict[str, List[Image.Image]]) -> Dict[str, Image.Image]:
+    def part_ref(part_name: str, file_id: str) -> str:
+        """Build a stable part reference like 'body_1' or 'ear_2'."""
+        return f"{part_name}_{file_id}"
+
+    @staticmethod
+    def parse_part_ref(ref: str) -> Tuple[str, str]:
+        """Parse 'body_1' into ('body', '1')."""
+        if '_' not in ref:
+            raise ValueError(f"Invalid part reference: {ref!r}")
+        part_name, file_id = ref.rsplit('_', 1)
+        return part_name, file_id
+
+    @staticmethod
+    def choose_random_parts(
+        parts_images: Dict[str, Dict[str, Image.Image]]
+    ) -> Tuple[Dict[str, Image.Image], Dict[str, str]]:
         """
-        Select random images for each cat part
-        
-        Args:
-            parts_images: Dictionary of part names to image lists
-            
+        Select random images for each cat part.
+
         Returns:
-            Dictionary of part names to selected images
+            (parts, refs) where parts maps locus -> Image and
+            refs maps locus -> string like 'body_1'
         """
-        selected = {
-            part: random.choice(images) 
-            for part, images in parts_images.items()
-        }
+        parts: Dict[str, Image.Image] = {}
+        refs: Dict[str, str] = {}
+        for part_name, by_id in parts_images.items():
+            file_id = random.choice(list(by_id.keys()))
+            parts[part_name] = by_id[file_id]
+            refs[part_name] = CatImageBuilder.part_ref(part_name, file_id)
         logger.debug("Selected random parts for cat")
-        return selected
+        return parts, refs
+
+    @staticmethod
+    def resolve_parts(
+        parts_images: Dict[str, Dict[str, Image.Image]],
+        refs: Dict[str, str],
+    ) -> Dict[str, Image.Image]:
+        """Resolve part references (body_1, ear_2, ...) to loaded images."""
+        parts: Dict[str, Image.Image] = {}
+        for part_name, ref in refs.items():
+            expected_name, file_id = CatImageBuilder.parse_part_ref(ref)
+            if expected_name != part_name:
+                raise ValueError(
+                    f"Part ref {ref!r} does not match locus {part_name!r}"
+                )
+            if part_name not in parts_images or file_id not in parts_images[part_name]:
+                raise KeyError(f"Unknown part reference: {ref}")
+            parts[part_name] = parts_images[part_name][file_id]
+        return parts
     
     @staticmethod
     def combine_parts(parts: Dict[str, Image.Image]) -> Image.Image:
@@ -239,6 +275,98 @@ class CatImageBuilder:
         
         draw.multiline_text(position, text, font=font, fill=color, align='center')
         logger.debug(f"Added text: {text.replace(chr(10), ' | ')}")
+
+    @staticmethod
+    def _load_font(font_name: str, font_size: int) -> ImageFont.ImageFont:
+        try:
+            return ImageFont.truetype(font_name, size=font_size)
+        except IOError:
+            logger.warning(f"Font '{font_name}' not found, using default")
+            return ImageFont.load_default()
+
+    @staticmethod
+    def add_cat_label(
+        img: Image.Image,
+        title: str,
+        color_strengths: Sequence[Tuple[RGB, float]],
+    ) -> None:
+        """
+        Draw name/generation and a color-strength legend under the cat.
+
+        ``color_strengths`` should already be sorted strongest-first.
+        Each entry is drawn as a color swatch + strength value.
+        """
+        font_name = GENERATION_PARAMS['font_name']
+        title_font = CatImageBuilder._load_font(
+            font_name, GENERATION_PARAMS['font_size']
+        )
+        gene_font = CatImageBuilder._load_font(
+            font_name, GENERATION_PARAMS.get('gene_font_size', 14)
+        )
+        text_color = GENERATION_PARAMS['text_color']
+        swatch = GENERATION_PARAMS.get('swatch_size', 12)
+        x_offset, y_offset = GENERATION_PARAMS['text_position']
+        gap = 4
+        row_gap = 3
+
+        draw = ImageDraw.Draw(img)
+        title_bbox = draw.textbbox((0, 0), title, font=title_font)
+        title_w = title_bbox[2] - title_bbox[0]
+        title_h = title_bbox[3] - title_bbox[1]
+
+        strength_labels = [f"{strength:.1f}" for _color, strength in color_strengths]
+        gene_widths = []
+        gene_heights = []
+        for label in strength_labels:
+            bbox = draw.textbbox((0, 0), label, font=gene_font)
+            gene_widths.append(bbox[2] - bbox[0])
+            gene_heights.append(bbox[3] - bbox[1])
+
+        gene_row_h = max([swatch] + gene_heights) if color_strengths else 0
+        gene_row_w = (
+            max((swatch + gap + w for w in gene_widths), default=0)
+            if color_strengths else 0
+        )
+
+        block_w = max(title_w, gene_row_w)
+        block_h = title_h
+        if color_strengths:
+            block_h += gap + len(color_strengths) * gene_row_h
+            if len(color_strengths) > 1:
+                block_h += (len(color_strengths) - 1) * row_gap
+
+        x0 = (img.width - block_w) // 2 + x_offset
+        y = img.height - block_h - y_offset - 5
+
+        draw.text(
+            (x0 + (block_w - title_w) // 2, y),
+            title,
+            font=title_font,
+            fill=text_color,
+        )
+        y += title_h + gap
+
+        for (color, _strength), label, label_w, label_h in zip(
+            color_strengths, strength_labels, gene_widths, gene_heights
+        ):
+            row_w = swatch + gap + label_w
+            row_x = x0 + (block_w - row_w) // 2
+            swatch_y = y + (gene_row_h - swatch) // 2
+            label_y = y + (gene_row_h - label_h) // 2
+            draw.rectangle(
+                [row_x, swatch_y, row_x + swatch - 1, swatch_y + swatch - 1],
+                fill=color,
+                outline=(80, 80, 80),
+            )
+            draw.text(
+                (row_x + swatch + gap, label_y),
+                label,
+                font=gene_font,
+                fill=text_color,
+            )
+            y += gene_row_h + row_gap
+
+        logger.debug(f"Added cat label: {title} ({len(color_strengths)} colors)")
 
 
 class FamilyLayoutBuilder:
