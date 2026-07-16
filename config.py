@@ -5,11 +5,10 @@ Contains paths and generation parameters
 
 from typing import List, Tuple, Dict
 
-# ---------------------------------------------------------------------------
 # How many colors a child inherits — probabilities as % (out of 100)
 # Edit the numbers freely. They are normalized if the sum is not exactly 100.
 # Set a weight to 0 to disable that count.
-# ---------------------------------------------------------------------------
+
 CHILD_COLOR_COUNT_WEIGHTS: Dict[int, float] = {
     2: 10,   # 10%
     3: 25,   # 25%
@@ -18,27 +17,6 @@ CHILD_COLOR_COUNT_WEIGHTS: Dict[int, float] = {
     6: 5,    # 5%
 }
 
-# Color definitions
-RGB = Tuple[int, int, int]
-
-# Gray shades used in original cat images (will be replaced with colors)
-GRAY_COLORS: List[RGB] = [
-    (195, 195, 195), (212, 212, 212), (224, 224, 224),
-    (235, 235, 235), (201, 201, 201), (194, 194, 194),
-    (189, 189, 189), (181, 181, 181), (171, 171, 171),
-    (247, 247, 247), (252, 252, 252)  # (252, 252, 252) is the main body color
-]
-
-# Folder paths for cat parts (all under parts/)
-CAT_PARTS_FOLDERS: Dict[str, str] = {
-    'ear': 'parts/ear',
-    'eyes': 'parts/eyes',
-    'body': 'parts/body',
-    'tail': 'parts/tail',
-    'legs': 'parts/legs',
-}
-
-# Generation parameters
 GENERATION_PARAMS = {
     'background_color': (240, 255, 255),  # Background color for family image
     'font_name': 'arial.ttf',       # Font for cat names
@@ -56,9 +34,9 @@ GENERATION_PARAMS = {
 
 # Genetics parameters (gene "strength" system)
 GENETICS_PARAMS = {
-    'base_strength': 1.0,          # Innate strength of a Gen 0 gene
-    'match_bonus': 1.0,            # Bonus when both parents share the same allele
-    'win_bonus': 0.5,              # Bonus a gene gets after winning inheritance
+    'base_strength': 1.0,         
+    'match_bonus': 1.0,           
+    'win_bonus': 0.5,              
     # Extra strength when a color claims the main body gray (252, 252, 252).
     # Stacks across generations so main colors dominate by Gen 2–3.
     'main_body_bonus': 1.0,
@@ -72,23 +50,39 @@ GENETICS_PARAMS = {
     'spillover_chance': 0.25,
     # Rare: add one extra weak gene from Gen 0/1 lineage colors (heritable)
     'mutation_chance': 0.1,
-    'mutation_strength': 0.5,      # Innate strength of a fresh mutation gene
+    'mutation_strength': 0.5,
 }
 
-# Output settings
+
+RGB = Tuple[int, int, int]
+
+# Gray shades used in original cat images (will be replaced with colors)
+GRAY_COLORS: List[RGB] = [
+    (195, 195, 195), (212, 212, 212), (224, 224, 224),
+    (235, 235, 235), (201, 201, 201), (194, 194, 194),
+    (189, 189, 189), (181, 181, 181), (171, 171, 171),
+    (247, 247, 247), (252, 252, 252)  # (252, 252, 252) is the main body color
+]
+
+CAT_PARTS_FOLDERS: Dict[str, str] = {
+    'ear': 'parts/ear',
+    'eyes': 'parts/eyes',
+    'body': 'parts/body',
+    'tail': 'parts/tail',
+    'legs': 'parts/legs',
+}
+
+
 OUTPUT_SETTINGS = {
     'default_filename': 'cats_family.png',
     'format': 'PNG',
     'quality': 95,
 }
 
-# Names file path
 NAMES_FILE = 'cats_name.TXT'
 
-# Saved Gen 0 seeds (colors + body part ids only)
 SEEDS_FILE = 'seeds.json'
 
-# Logging configuration
 LOGGING_CONFIG = {
     'level': 'INFO',
     'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',

@@ -1,7 +1,10 @@
 # 🐱 Cat Family Generator
 
 ## Example
-![one_result](cats_family.png)
+
+<img src="cats_family_preview.png" alt="Cat family pedigree (preview)" width="500">
+
+[Full resolution output](cats_family.png)
 
 ## 📋 Table of Contents
 - [Overview](#-overview)
@@ -157,7 +160,8 @@ Generate_cats_family_png/
 ├── GENETICS.md             # Genetics system (strength, weights, mutation)
 ├── .gitignore              # Git ignore patterns
 ├── cats_name.TXT           # List of cat names
-├── cats_family.png         # Example output
+├── cats_family.png         # Example output (full size)
+├── cats_family_preview.png # README preview
 ├── parts/                  # Cat body part images
 │   ├── body/               # Body variants (PNG)
 │   ├── ear/                # Ear variants (PNG)

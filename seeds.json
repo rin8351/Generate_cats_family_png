@@ -254,123 +254,123 @@
       "id": 3,
       "cats": [
         {
-          "name": "Mittens",
+          "name": "Chauncey",
           "color": [
-            245,
-            245,
-            220
-          ],
-          "parts": {
-            "ear": "ear_6",
-            "eyes": "eyes_1",
-            "body": "body_2",
-            "tail": "tail_6",
-            "legs": "legs_4"
-          }
-        },
-        {
-          "name": "Tiger",
-          "color": [
-            240,
-            233,
-            254
+            255,
+            153,
+            153
           ],
           "parts": {
             "ear": "ear_2",
-            "eyes": "eyes_1",
-            "body": "body_5",
-            "tail": "tail_4",
-            "legs": "legs_1"
+            "eyes": "eyes_8",
+            "body": "body_2",
+            "tail": "tail_1",
+            "legs": "legs_7"
           }
         },
         {
-          "name": "Lucky",
+          "name": "Felix",
           "color": [
-            255,
-            209,
-            248
-          ],
-          "parts": {
-            "ear": "ear_5",
-            "eyes": "eyes_3",
-            "body": "body_5",
-            "tail": "tail_7",
-            "legs": "legs_4"
-          }
-        },
-        {
-          "name": "Daisy",
-          "color": [
-            92,
-            225,
-            77
+            196,
+            222,
+            156
           ],
           "parts": {
             "ear": "ear_4",
-            "eyes": "eyes_1",
+            "eyes": "eyes_7",
             "body": "body_3",
-            "tail": "tail_8",
-            "legs": "legs_6"
-          }
-        },
-        {
-          "name": "Pumpkin",
-          "color": [
-            255,
-            228,
-            181
-          ],
-          "parts": {
-            "ear": "ear_3",
-            "eyes": "eyes_6",
-            "body": "body_2",
             "tail": "tail_2",
             "legs": "legs_1"
           }
         },
         {
-          "name": "Simba",
+          "name": "Princess",
+          "color": [
+            250,
+            250,
+            210
+          ],
+          "parts": {
+            "ear": "ear_5",
+            "eyes": "eyes_5",
+            "body": "body_2",
+            "tail": "tail_2",
+            "legs": "legs_3"
+          }
+        },
+        {
+          "name": "Jasmine",
+          "color": [
+            242,
+            242,
+            102
+          ],
+          "parts": {
+            "ear": "ear_6",
+            "eyes": "eyes_7",
+            "body": "body_3",
+            "tail": "tail_2",
+            "legs": "legs_3"
+          }
+        },
+        {
+          "name": "Tiger",
+          "color": [
+            227,
+            250,
+            255
+          ],
+          "parts": {
+            "ear": "ear_5",
+            "eyes": "eyes_6",
+            "body": "body_2",
+            "tail": "tail_4",
+            "legs": "legs_7"
+          }
+        },
+        {
+          "name": "Tiger",
           "color": [
             255,
             255,
             153
           ],
           "parts": {
-            "ear": "ear_6",
-            "eyes": "eyes_6",
-            "body": "body_3",
-            "tail": "tail_3",
-            "legs": "legs_2"
-          }
-        },
-        {
-          "name": "Toby",
-          "color": [
-            234,
-            255,
-            223
-          ],
-          "parts": {
             "ear": "ear_5",
-            "eyes": "eyes_2",
+            "eyes": "eyes_1",
             "body": "body_3",
             "tail": "tail_3",
             "legs": "legs_5"
           }
         },
         {
-          "name": "Snowball",
+          "name": "Winston",
           "color": [
-            153,
-            247,
-            230
+            255,
+            193,
+            204
           ],
           "parts": {
-            "ear": "ear_5",
-            "eyes": "eyes_8",
-            "body": "body_2",
-            "tail": "tail_5",
-            "legs": "legs_7"
+            "ear": "ear_3",
+            "eyes": "eyes_2",
+            "body": "body_4",
+            "tail": "tail_4",
+            "legs": "legs_1"
+          }
+        },
+        {
+          "name": "Oliver",
+          "color": [
+            255,
+            228,
+            181
+          ],
+          "parts": {
+            "ear": "ear_7",
+            "eyes": "eyes_2",
+            "body": "body_4",
+            "tail": "tail_1",
+            "legs": "legs_2"
           }
         }
       ]

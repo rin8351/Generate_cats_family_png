@@ -1,7 +1,3 @@
-"""
-Simplified tests for the Cat Family Generator project
-Tests only the essential requirements for the project to work correctly
-"""
 from pathlib import Path
 from cats_colors import CATS_COLORS
 from config import (

@@ -1,6 +1,5 @@
 """
 Image Processing Module for Cat Family Generator
-Handles loading, combining, and coloring cat images with optimized performance
 """
 
 import os

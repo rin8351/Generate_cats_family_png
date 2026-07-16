@@ -1,7 +1,4 @@
 """
-Cat Genetics Module
-Handles cat generation, genetics, and color inheritance with gene "strength".
-
 Each trait (color and every body part) is a separate gene carrying a
 `strength` value. Stronger genes are more likely to win inheritance and,
 for colors, cover a larger share of the body. Strength grows in three ways:

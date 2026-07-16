@@ -2,9 +2,6 @@
 """
 Cat Family Generator - Main Entry Point
 
-Generates a family tree of cats with genetic inheritance of colors and body parts.
-Generation 0 can be saved/reloaded as a "seed" (colors + part refs only);
-later generations are always re-rolled by inheritance.
 """
 
 import os
@@ -132,7 +129,7 @@ def generate_cat_family(
     logging.info("Generating Family Tree")
     logging.info("=" * 50)
 
-    # === FIRST BRANCH ===
+
     logging.info("\n--- First Branch ---")
     kitten1 = family.create_kitten(parent1, parent2, family.get_random_name())
     kitten2 = family.create_kitten(parent3, parent4, family.get_random_name())
@@ -140,7 +137,7 @@ def generate_cat_family(
         kitten1, kitten2, family.get_random_name()
     )
 
-    # === SECOND BRANCH ===
+
     logging.info("\n--- Second Branch ---")
     kitten3 = family.create_kitten(parent5, parent6, family.get_random_name())
     kitten4 = family.create_kitten(parent7, parent8, family.get_random_name())
@@ -148,7 +145,7 @@ def generate_cat_family(
         kitten3, kitten4, family.get_random_name()
     )
 
-    # === GREAT GRANDKITTEN ===
+
     logging.info("\n--- Great Grandkitten ---")
     great_grandkitten = family.create_grandkitten(
         grandkitten1, grandkitten2, family.get_random_name()
