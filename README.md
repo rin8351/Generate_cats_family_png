@@ -83,7 +83,7 @@ Each cat is labeled with its name, generation, and a legend of its color genes (
 
 ## 🧬 Genetics
 
-Inheritance is **not** pure random anymore. Colors and body parts are genes with
+Colors and body parts are genes with
 **strength** that grows when they win, match in both parents, or (for colors)
 paint the main fur. By Gen 2–3, strong traits dominate.
 
@@ -225,7 +225,7 @@ Generate a cat family with default settings:
 python main.py
 ```
 
-This creates `cats_family.png` in the current directory.
+This creates `cats_family.png` in the current directory. This creates cats_family.png in the current directory. Each run overwrites that file; use -o to save under a different name.
 
 ### Advanced Usage
 
