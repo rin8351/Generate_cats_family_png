@@ -81,7 +81,7 @@ Parent8 ──┘
 Each cat is labeled with its name, generation, and a legend of its color genes (swatch + strength).
 
 
-## 🧬 Genetics
+##  Genetics
 
 Colors and body parts are genes with
 **strength** that grows when they win, match in both parents, or (for colors)
@@ -109,7 +109,7 @@ Other genetics settings live in `GENETICS_PARAMS` (strength bonuses, spillover,
 mutation chance, etc.) — see [`GENETICS.md`](GENETICS.md).
 
 
-## ⚙️ Configuration
+## Configuration
 
 ### Color Palette (`cats_colors.py`)
 
@@ -268,7 +268,7 @@ OUTPUT_SETTINGS = {
 }
 ```
 
-## 📸 Examples
+## Examples
 
 ### Example 1: Default Generation
 ```bash
